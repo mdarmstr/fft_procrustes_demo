@@ -151,6 +151,37 @@ nexttile; imagesc(imgAligned_D); axis image; colorbar; title('Aligned (Wider)');
 %% 5. Save the Final Figure as a PNG File with Minimal Whitespace
 exportgraphics(gcf, 'aligned_analysis.png', 'Resolution', 300);
 
+%% 6. Compute Cosine Correlation Coefficients and Generate LaTeX Table
+% Unfold the images into vectors.
+vecOriginal = imgOriginal(:);
+cosCorr = zeros(4,1);
+cosCorr(1) = dot(imgAligned_A(:), vecOriginal) / (norm(imgAligned_A(:)) * norm(vecOriginal));
+cosCorr(2) = dot(imgAligned_B(:), vecOriginal) / (norm(imgAligned_B(:)) * norm(vecOriginal));
+cosCorr(3) = dot(imgAligned_C(:), vecOriginal) / (norm(imgAligned_C(:)) * norm(vecOriginal));
+cosCorr(4) = dot(imgAligned_D(:), vecOriginal) / (norm(imgAligned_D(:)) * norm(vecOriginal));
+
+% Prepare LaTeX table string
+latexTable = sprintf(['\\begin{tabular}{l c}\n',...
+                      '\\hline\n',...
+                      'Variant & Cosine Correlation \\\\\n',...
+                      '\\hline\n',...
+                      'No Noise & %.4f \\\\\n',...
+                      'With Noise & %.4f \\\\\n',...
+                      '+ Extra Peaks & %.4f \\\\\n',...
+                      'Wider & %.4f \\\\\n',...
+                      '\\hline\n',...
+                      '\\end{tabular}\n'], cosCorr(1), cosCorr(2), cosCorr(3), cosCorr(4));
+
+% Display the LaTeX table in the Command Window.
+disp('LaTeX Table of Cosine Correlation Coefficients:');
+disp(latexTable);
+
+filename = 'cosine_correlation_table.tex';
+fid = fopen(filename, 'w');  % Open the file for writing
+
+fprintf(fid, '%s', latexTable);  % Write the LaTeX table string to the file
+fclose(fid);  % Close the file
+
 %% Local Helper Function: frequencyAlign
 function imgAligned = frequencyAlign(imgShiftedVariant, idxH, idxW, imgH, imgW, Fvec_orig_small)
     % Compute the 2D FFT of the shifted variant and center it.
