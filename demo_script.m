@@ -110,46 +110,47 @@ imgAligned_C = alignVariant(imgShifted_extra);     % (C) + Extra Peaks
 imgAligned_D = alignVariant(imgShifted_wider);     % (D) Wider
 
 %% 4. Display the Results Using Tiled Layout with Compact Spacing
+%% 4. Display the Results Using Tiled Layout with Compact Spacing
 t = tiledlayout(4, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
 
 % Row 1: Shifted (No Noise)
-nexttile; imagesc(imgOriginal); axis image; colorbar; title('Original');
-nexttile; imagesc(imgShifted); axis image; colorbar; title('Shifted (No Noise)');
-nexttile; imagesc(imgAligned_A); axis image; colorbar; title('Aligned (No Noise)');
+nexttile; imagesc(imgOriginal);   ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Original');
+nexttile; imagesc(imgShifted);    ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Shifted (No Noise)');
+nexttile; imagesc(imgAligned_A);  ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Aligned (No Noise)');
 
 % Row 2: Shifted (With Noise)
-nexttile; imagesc(imgOriginal); axis image; colorbar; title('Original');
-nexttile; imagesc(imgShifted_noisy); axis image; colorbar; title('Shifted (With Noise)');
-nexttile; imagesc(imgAligned_B); axis image; colorbar; title('Aligned (With Noise)');
+nexttile; imagesc(imgOriginal);       ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Original');
+nexttile; imagesc(imgShifted_noisy);  ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Shifted (With Noise)');
+nexttile; imagesc(imgAligned_B);      ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Aligned (With Noise)');
 
 % Row 3: Shifted (+ Extra Peaks)
-nexttile; imagesc(imgOriginal); axis image; colorbar; title('Original');
+nexttile; imagesc(imgOriginal);       ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Original');
 nexttile; 
-imagesc(imgShifted_extra); 
-axis image; colorbar; 
-title('Shifted (+ Extra Peaks)');
-hold on;
-for i = 1:size(extraPeaks,1)
-    cx = extraPeaks(i,1);
-    cy = extraPeaks(i,2);
-    sigmaExtra = extraPeaks(i,3);
-    r = 3 * sigmaExtra;  % choose a radius (e.g., 3*sigmaExtra)
-    rectangle('Position', [cx - r, cy - r, 2*r, 2*r], 'Curvature', [1, 1], ...
-              'EdgeColor', 'r', 'LineWidth', 2, 'Clipping', 'on');
-end
-hold off;
-% Reset the x- and y-limits after drawing the circles.
-ax = gca;
-set(ax, 'XLim', [1 imgW], 'YLim', [1 imgH]);
-nexttile; imagesc(imgAligned_C); axis image; colorbar; title('Aligned (+ Extra Peaks)');
+    imagesc(imgShifted_extra); 
+    ax = gca; ax.YDir = 'normal'; 
+    axis image; colorbar; 
+    title('Shifted (+ Extra Peaks)');
+    hold on;
+    for i = 1:size(extraPeaks,1)
+        cx = extraPeaks(i,1);
+        cy = extraPeaks(i,2);
+        sigmaExtra = extraPeaks(i,3);
+        r = 3 * sigmaExtra;  % choose a radius (e.g., 3*sigmaExtra)
+        rectangle('Position', [cx - r, cy - r, 2*r, 2*r], 'Curvature', [1, 1], ...
+                  'EdgeColor', 'r', 'LineWidth', 2, 'Clipping', 'on');
+    end
+    hold off;
+    set(ax, 'XLim', [1 imgW], 'YLim', [1 imgH]);
+
+nexttile; imagesc(imgAligned_C);  ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Aligned (+ Extra Peaks)');
 
 % Row 4: Shifted (Wider)
-nexttile; imagesc(imgOriginal); axis image; colorbar; title('Original');
-nexttile; imagesc(imgShifted_wider); axis image; colorbar; title('Shifted (Wider)');
-nexttile; imagesc(imgAligned_D); axis image; colorbar; title('Aligned (Wider)');
+nexttile; imagesc(imgOriginal);       ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Original');
+nexttile; imagesc(imgShifted_wider);  ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Shifted (Wider)');
+nexttile; imagesc(imgAligned_D);      ax = gca; ax.YDir = 'normal'; axis image; colorbar; title('Aligned (Wider)');
 
 %% 5. Save the Final Figure as a PNG File with Minimal Whitespace
-exportgraphics(gcf, 'aligned_analysis.png', 'Resolution', 300);
+exportgraphics(gcf, 'aligned_analysis.pdf', 'Resolution', 500);
 vecOriginal = imgOriginal(:);
 % Compute cosine correlations for the aligned variants.
 cosCorr = zeros(4,1);
